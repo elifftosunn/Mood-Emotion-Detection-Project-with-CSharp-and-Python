@@ -3,3 +3,6 @@ bin/*
 obj/*
 MoodSyncProject.csproj
 MoodSyncProject.csproj.user
+detected_images/ElifTosun_.jpg
+detected_images/ElifTosun.jpg
+runs/*

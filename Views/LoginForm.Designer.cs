@@ -93,7 +93,7 @@
             btnLogin.FlatStyle = FlatStyle.Flat;
             btnLogin.Font = new Font("Arial Narrow", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 162);
             btnLogin.ForeColor = Color.Black;
-            btnLogin.Location = new Point(76, 217);
+            btnLogin.Location = new Point(76, 226);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(335, 29);
             btnLogin.TabIndex = 11;

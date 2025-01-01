@@ -138,8 +138,10 @@
             Controls.Add(lblUploadImage);
             Controls.Add(btnDetect);
             Controls.Add(uploadImgPictureBox);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "DetectImageForm";
-            Text = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Detect Form";
             ((System.ComponentModel.ISupportInitialize)uploadImgPictureBox).EndInit();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();

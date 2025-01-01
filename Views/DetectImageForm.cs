@@ -1,3 +1,5 @@
+using designProject.Models;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -12,6 +14,8 @@ namespace designProject
         private string resultImagePath;
         private string pythonExe;
         private string outputPath;
+        private DBConnection conn;
+        private SqlDataReader dataReader;
         public DetectImageForm()
         {
             InitializeComponent();
@@ -29,62 +33,77 @@ namespace designProject
                 // Python betiðini çalýþtýr ve tespit edilen resim yolunu al
                 resultImagePath = RunPythonScript(yolo_detectPyPath, imagePath);
 
-                // Tespit edilen görüntüyü PictureBox üzerinde göster
-                if (File.Exists(resultImagePath))
+                string ImagePath = resultImagePath.Split(",")[0];
+                string mood = resultImagePath.Split(",")[1].Trim();
+                string query = "INSERT INTO MoodHistory VALUES (@_userID, @_mood, @_detectionTime)";
+                SqlParameter[] parameters =
                 {
-                    uploadImgPictureBox.Image = System.Drawing.Image.FromFile(resultImagePath);
+                    new SqlParameter("@_userID", System.Data.SqlDbType.Int){Value = 1},
+                    new SqlParameter ("@_mood", System.Data.SqlDbType.VarChar) {Value = mood },
+                    new SqlParameter("@_detectionTime", System.Data.SqlDbType.DateTime) {Value = DateTime.Now},
+                };
+                conn = new DBConnection();
+                int res = conn.ExecuteNonQuery(query, parameters);
+                if(res > 0)
+                {
+                    MessageBox.Show("Tespit veritabanýna baþarýlý bir þekilde kayýt edildi.","Detection",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    Debug.WriteLine($"Image: {ImagePath}\nMood: {mood}\nVeritabanýna kayýt edilemedi!");
+                }
+                // Tespit edilen görüntüyü PictureBox üzerinde göster
+                if (File.Exists(ImagePath))
+                {
+                    uploadImgPictureBox.Image = System.Drawing.Image.FromFile(ImagePath);
                     uploadImgPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
                 }
                 else
                 {
-                    MessageBox.Show($"Detection failed. File not found: {resultImagePath}");
+                    MessageBox.Show($"Detection failed. File not found: {ImagePath}");
                 }
             }
         }
+        private string ReadPythonOutput(string outputFilePath)
+        {
+            if (!File.Exists(outputFilePath))
+                throw new FileNotFoundException("Python output file not found!");
+
+            return File.ReadAllText(outputFilePath).Trim();  // read and return the content of file
+        }
+
         private string RunPythonScript(string scriptPath, string imagePath)
         {
             pythonExe = @"C:\Users\dptos\AppData\Local\Programs\Python\Python310\python.exe";
-            outputPath = string.Empty;
 
+            string outputFilePath = Path.Combine(Path.GetDirectoryName(scriptPath), "detected_images\\output.txt");
             try
             {
                 ProcessStartInfo start = new ProcessStartInfo
                 {
-                    FileName = pythonExe,  // Çalýþtýrýlacak dosyanýn yolu
-                    Arguments = $"{scriptPath} \"{imagePath}\"",  // Komut satýrý argümanlarý
-                    RedirectStandardOutput = true,  // Python betiðinin çýktýlarýný okumak için yeniden yönlendir
-                    UseShellExecute = false,  // Kabuk iþlemi kullanma (doðrudan uygulama çalýþtýr)
-                    CreateNoWindow = true     // Yeni bir konsol penceresi oluþturma
+                    FileName = pythonExe,
+                    Arguments = $"{scriptPath} \"{imagePath}\"",
+                    RedirectStandardOutput = false,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
                 };
 
                 using (Process process = Process.Start(start))
                 {
-                    using (StreamReader reader = process.StandardOutput)
-                    {
-                        string rawOutput = reader.ReadToEnd().Trim();
-                        Debug.WriteLine("rawOutput: " + rawOutput);
-                        outputPath = ExtractFilePath(rawOutput);
-                        Debug.WriteLine("Extracted Output Path: " + outputPath);
-                    }
+                    process.WaitForExit();  
                 }
-                //outputPath = @"C:\Users\dptos\source\repos\designProject\designProject\detected_images\happy-photo.jpg";
-                // Python betiðinden gelen yolun geçerli olup olmadýðýný kontrol et
-                if (!File.Exists(outputPath))
-                {
-                    throw new FileNotFoundException("Python script did not return a valid file path.");
-                }
+                return ReadPythonOutput(outputFilePath);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error: {ex.Message}");
+                return string.Empty;
             }
-
-            return outputPath;
         }
 
         private string ExtractFilePath(string raw)
         {
-            // Boþluk karakterine göre parçala
             string[] parts = raw.Split(' ');
             int firstColonIndex = parts[2].IndexOf(':'); // Ýlk ':'
             int secondColonIndex = parts[2].LastIndexOf(':'); // Ýlk ':' sonrasý
