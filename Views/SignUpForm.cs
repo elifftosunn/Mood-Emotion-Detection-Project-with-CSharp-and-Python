@@ -47,7 +47,7 @@ namespace designProject.Views
             string query = "SELECT Password FROM Users WHERE Email = @Email";
             SqlParameter[] parameters =
             {
-                new SqlParameter("@Email", SqlDbType.VarChar) { Value = email }
+                new SqlParameter("@Email", SqlDbType.VarChar) { Value = email.ToLower() }
             };
 
             try
@@ -73,7 +73,7 @@ namespace designProject.Views
         {
             fName = textBoxFName.Text.ToString().Trim();
             lName = textBoxLName.Text.ToString().Trim();  
-            email = textBoxEmail.Text.ToString().Trim();
+            email = textBoxEmail.Text.ToString().Trim().ToLower();
             phoneNumber = textBoxPhoneNumber.Text.ToString().Trim();
             password = textBoxPassword.Text.ToString().Trim();
             confirmPassword = textBoxConfirmPassword.Text.Trim();   
@@ -190,6 +190,9 @@ namespace designProject.Views
             LoginForm loginForm = new LoginForm();
             loginForm.Show();
             this.Hide();
+
+            //loginForm.FormClosed += (s, args) => Application.Exit();
+
         }
 
 

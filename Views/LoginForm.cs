@@ -1,8 +1,11 @@
 ﻿using designProject.Models;
+using Microsoft.VisualBasic.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,22 +16,30 @@ namespace designProject.Views
 {
     public partial class LoginForm : Form
     {
+        private int userID;
         private string email, password;
         private bool isPasswordVisible = false;
         private User user;
         private bool userCheck;
         private int remainingPassword = 3;
+        private string query;
+        private DBConnection connection;
+        private SqlDataReader reader;
+        public string loginTime;
         public LoginForm()
         {
             InitializeComponent();
         }
-
+        public int getUserID()
+        {
+            return this.userID;
+        }
         private void loginBtn_Click(object sender, EventArgs e)
         {
-            email = textBoxEmail.Text.ToString().Trim();
-            password = textBoxPassword.Text.ToString().Trim();
+            this.email = textBoxEmail.Text.ToString().Trim().ToLower();
+            this.password = textBoxPassword.Text.ToString().Trim();
 
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(this.email) || string.IsNullOrWhiteSpace(this.password))
             {
                 MessageBox.Show("Email ve şifre alanları boş bırakılamaz!", "Null Email or Password",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -36,17 +47,30 @@ namespace designProject.Views
             }
 
             // user validation
-            user = new User(email, password);
-            userCheck = user.VerifyLogin();
+            this.user = new User(this.email, this.password);
+            this.userCheck = this.user.VerifyLogin();
 
             if (userCheck)
             {
+                loginTime = DateTime.Now.ToString();
                 MessageBox.Show("Resim tespit sayfasına yönlendiriliyorsunuz...", "Detect Image",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Thread.Sleep(500);
-                DetectImageForm detectImageForm = new DetectImageForm();
-                detectImageForm.Show();
-                this.Hide();
+                this.query = @"SELECT userID FROM Users WHERE email = @_email";
+                SqlParameter[] parameters = {
+                    new SqlParameter("@_email", SqlDbType.VarChar) { Value = this.email}
+                };
+                this.connection = new DBConnection();
+                this.reader = this.connection.ExecuteQueryWithReader(query, parameters);
+                DetectImageForm detectImageForm = new DetectImageForm(this);
+                if (reader.Read()) 
+                {
+                    this.userID = Convert.ToInt32(reader["userID"]);
+                    Thread.Sleep(500);
+                    detectImageForm.Show();
+                    this.Close();
+                }
+
+
             }
             else
             {
@@ -99,9 +123,9 @@ namespace designProject.Views
         private void btnTogglePassword_Click(object sender, EventArgs e)
         {
             // Şifre gösterim durumunu değiştir
-            isPasswordVisible = !isPasswordVisible;
+            this.isPasswordVisible = !this.isPasswordVisible;
 
-            if (isPasswordVisible)
+            if (this.isPasswordVisible)
             {
                 textBoxPassword.PasswordChar = '\0'; // Şifreyi göster
                 btnTogglePassword.Text = "🙈";  // Göz kapa simgesi

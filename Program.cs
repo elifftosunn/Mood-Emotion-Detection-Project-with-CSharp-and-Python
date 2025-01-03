@@ -1,4 +1,5 @@
 using designProject;
+using designProject.Views;
 
 namespace MoodSyncProject
 {
@@ -13,7 +14,7 @@ namespace MoodSyncProject
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new DetectImageForm());
+            Application.Run(new SignUpForm());
         }
     }
 }

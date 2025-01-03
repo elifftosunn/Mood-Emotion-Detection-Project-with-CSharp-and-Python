@@ -1,4 +1,8 @@
 using designProject.Models;
+using designProject.Views;
+using Microsoft.VisualBasic.Logging;
+using MoodSyncProject.Models;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
@@ -16,9 +20,15 @@ namespace designProject
         private string outputPath;
         private DBConnection conn;
         private SqlDataReader dataReader;
-        public DetectImageForm()
+        private Music music;
+        private List<Music> musicList;
+        private LoginForm login;
+        public string logoutTime;
+
+        public DetectImageForm(LoginForm loginForm)
         {
             InitializeComponent();
+            this.login = loginForm;
         }
 
         private void btnDetect_Click(object sender, EventArgs e)
@@ -30,30 +40,13 @@ namespace designProject
                 imagePath = openFileDialog.FileName;
                 yolo_detectPyPath = @"C:\Users\dptos\source\repos\designProject\designProject\yolo_detect.py";
 
-                // Python betiðini çalýþtýr ve tespit edilen resim yolunu al
+                // run python script and pull the detected image path 
                 resultImagePath = RunPythonScript(yolo_detectPyPath, imagePath);
-
                 string ImagePath = resultImagePath.Split(",")[0];
                 string mood = resultImagePath.Split(",")[1].Trim();
-                string query = "INSERT INTO MoodHistory VALUES (@_userID, @_mood, @_detectionTime)";
-                SqlParameter[] parameters =
-                {
-                    new SqlParameter("@_userID", System.Data.SqlDbType.Int){Value = 1},
-                    new SqlParameter ("@_mood", System.Data.SqlDbType.VarChar) {Value = mood },
-                    new SqlParameter("@_detectionTime", System.Data.SqlDbType.DateTime) {Value = DateTime.Now},
-                };
-                conn = new DBConnection();
-                int res = conn.ExecuteNonQuery(query, parameters);
-                if(res > 0)
-                {
-                    MessageBox.Show("Tespit veritabanýna baþarýlý bir þekilde kayýt edildi.","Detection",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    Debug.WriteLine($"Image: {ImagePath}\nMood: {mood}\nVeritabanýna kayýt edilemedi!");
-                }
-                // Tespit edilen görüntüyü PictureBox üzerinde göster
+                SaveUserMoodHistory(mood, ImagePath);
+
+                // show the detected image on Picturebox
                 if (File.Exists(ImagePath))
                 {
                     uploadImgPictureBox.Image = System.Drawing.Image.FromFile(ImagePath);
@@ -65,6 +58,73 @@ namespace designProject
                 }
             }
         }
+
+        private void SaveUserMoodHistory(string mood, string ImagePath)
+        {
+            string query = "INSERT INTO MoodHistory VALUES (@_userID, @_mood, @_detectionTime)";
+            SqlParameter[] parameters =
+            {
+                    new SqlParameter("@_userID", System.Data.SqlDbType.Int){Value = login.getUserID()},
+                    new SqlParameter ("@_mood", System.Data.SqlDbType.VarChar) {Value = mood },
+                    new SqlParameter("@_detectionTime", System.Data.SqlDbType.DateTime) {Value = DateTime.Now},
+                };
+            conn = new DBConnection();
+            int res = conn.ExecuteNonQuery(query, parameters);
+            if (res > 0)
+            {
+                //MessageBox.Show("Tespit veritabanýna baþarýlý bir þekilde kayýt edildi.","Detection",
+                //    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                addPanelForMusics(mood);
+            }
+            else
+            {
+                Debug.WriteLine($"Image: {ImagePath}\nMood: {mood}\nVeritabanýna kayýt edilemedi!");
+            }
+        }
+        private void panelForMusicClick(object sender, EventArgs e)
+        {
+            // Týklama sýrasýnda yapýlacak iþlemler
+            Panel clickedPanel = sender as Panel;
+            if (clickedPanel != null)
+            {
+                MessageBox.Show("Panel týklandý: " + clickedPanel.Name);
+            }
+        }
+        private void addPanelForMusics(string mood)
+        {
+            music = new Music(mood);
+            musicList = music.getMusicList();
+            foreach (var music in musicList)
+            {
+                Panel panelForMusics = new Panel
+                {
+                    BackColor = Color.FromArgb(202, 180, 133),
+                    Location = new Point(3, 58), // Default location, will be organized within the FlowLayoutPanel 
+                    Name = "panelForMusics",
+                    Size = new Size(573, 70),
+                    TabIndex = 0
+                };
+                panelForMusics.Click += panelForMusicClick; // new EventHandler(panelForMusicClick)
+                Label lblMusicName = new Label
+                {
+                    Text = music.getName(),
+                    Location = new Point(10, 10),
+                    AutoSize = true
+                };
+                Label lblArtist = new Label
+                {
+                    Text = "Artist: " + music.getArtist(),
+                    Location = new Point(10, lblMusicName.Location.Y + lblMusicName.Height + 5), // lblMusicName'in altýnda 5 piksel boþluk
+                    AutoSize = true
+                };
+
+                panelForMusics.Controls.Add(lblArtist);
+                panelForMusics.Controls.Add(lblMusicName);
+
+                flowLayoutPanelForMusics.Controls.Add(panelForMusics);
+            }
+        }
+
         private string ReadPythonOutput(string outputFilePath)
         {
             if (!File.Exists(outputFilePath))
@@ -91,7 +151,7 @@ namespace designProject
 
                 using (Process process = Process.Start(start))
                 {
-                    process.WaitForExit();  
+                    process.WaitForExit();
                 }
                 return ReadPythonOutput(outputFilePath);
             }
@@ -101,19 +161,25 @@ namespace designProject
                 return string.Empty;
             }
         }
-
-        private string ExtractFilePath(string raw)
-        {
-            string[] parts = raw.Split(' ');
-            int firstColonIndex = parts[2].IndexOf(':'); // Ýlk ':'
-            int secondColonIndex = parts[2].LastIndexOf(':'); // Ýlk ':' sonrasý
-            // ':' iþaretine kadar olan kýsmý al
-            string imagePath = parts[2].Substring(firstColonIndex - 1, secondColonIndex);
-            return imagePath;
-        }
-
         private void btnLogout_Click(object sender, EventArgs e)
         {
+            logoutTime = DateTime.Now.ToString();
+            string sessionQuery = "INSERT INTO Sessions VALUES (@_userID, @_loginTime, @_logoutTime)";
+            SqlParameter[] sessionParameters =
+            {
+                    new SqlParameter("@_userID", SqlDbType.Int) {Value = login.getUserID()},
+                    new SqlParameter("@_loginTime", SqlDbType.DateTime) {Value = login.loginTime},
+                    new SqlParameter("@_logoutTime", SqlDbType.DateTime) {Value = logoutTime}
+            };
+            int res = conn.ExecuteNonQuery(sessionQuery, sessionParameters);
+            if (res > 0)
+            {
+                Debug.WriteLine("Session bilgileri baþarýyla kaydedildi.");
+            }
+            else
+            {
+                Debug.WriteLine("Session bilgileri kaydedilemedi");
+            }
             this.Close();
         }
     }
