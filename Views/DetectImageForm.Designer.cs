@@ -42,6 +42,7 @@
             panel3 = new Panel();
             labelMusicName = new Label();
             labelArtist = new Label();
+            btnUserDetails = new Button();
             ((System.ComponentModel.ISupportInitialize)uploadImgPictureBox).BeginInit();
             panel2.SuspendLayout();
             flowLayoutPanelForMusics.SuspendLayout();
@@ -103,11 +104,12 @@
             // btnLogout
             // 
             btnLogout.BackColor = Color.Maroon;
+            btnLogout.Dock = DockStyle.Right;
             btnLogout.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
             btnLogout.ForeColor = Color.White;
-            btnLogout.Location = new Point(1090, 15);
+            btnLogout.Location = new Point(1115, 0);
             btnLogout.Name = "btnLogout";
-            btnLogout.Size = new Size(103, 50);
+            btnLogout.Size = new Size(103, 88);
             btnLogout.TabIndex = 2;
             btnLogout.Text = "Logout";
             btnLogout.UseVisualStyleBackColor = false;
@@ -171,12 +173,26 @@
             labelArtist.TabIndex = 0;
             labelArtist.Text = "Artist";
             // 
+            // btnUserDetails
+            // 
+            btnUserDetails.BackColor = Color.PeachPuff;
+            btnUserDetails.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnUserDetails.ForeColor = Color.Black;
+            btnUserDetails.Location = new Point(795, 513);
+            btnUserDetails.Name = "btnUserDetails";
+            btnUserDetails.Size = new Size(178, 50);
+            btnUserDetails.TabIndex = 20;
+            btnUserDetails.Text = "User Details";
+            btnUserDetails.UseVisualStyleBackColor = false;
+            btnUserDetails.Click += btnUserDetails_Click;
+            // 
             // DetectImageForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LightGray;
             ClientSize = new Size(1218, 595);
+            Controls.Add(btnUserDetails);
             Controls.Add(flowLayoutPanelForMusics);
             Controls.Add(panel1);
             Controls.Add(panel2);
@@ -212,5 +228,6 @@
         private Panel panel3;
         private Label labelArtist;
         private Label labelMusicName;
+        private Button btnUserDetails;
     }
 }

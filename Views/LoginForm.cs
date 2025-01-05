@@ -30,10 +30,7 @@ namespace designProject.Views
         {
             InitializeComponent();
         }
-        public int getUserID()
-        {
-            return this.userID;
-        }
+
         private void loginBtn_Click(object sender, EventArgs e)
         {
             this.email = textBoxEmail.Text.ToString().Trim().ToLower();
@@ -61,16 +58,14 @@ namespace designProject.Views
                 };
                 this.connection = new DBConnection();
                 this.reader = this.connection.ExecuteQueryWithReader(query, parameters);
-                DetectImageForm detectImageForm = new DetectImageForm(this);
                 if (reader.Read()) 
                 {
                     this.userID = Convert.ToInt32(reader["userID"]);
                     Thread.Sleep(500);
-                    detectImageForm.Show();
+                    DetectImageForm detectImageForm = new DetectImageForm(this);
+                    detectImageForm.ShowDialog();
                     this.Close();
                 }
-
-
             }
             else
             {
@@ -89,7 +84,10 @@ namespace designProject.Views
                 }
             }
         }
-
+        public int getUserID()
+        {
+            return this.userID;
+        }
 
         private void textBoxEmail_Enter(object sender, EventArgs e)
         {

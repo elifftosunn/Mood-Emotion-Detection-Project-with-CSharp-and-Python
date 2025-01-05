@@ -9,13 +9,14 @@ namespace designProject.Models
 {
     public class DBConnection
     {
-        private SqlConnection connection;
+        public SqlConnection connection;
         private SqlCommand cmd;
         private SqlDataReader dataReader;
         public void OpenConnection()
         {
-            connection = new SqlConnection("Data Source=.\\MSSQLSERVER2022;Initial Catalog=MoodSync;Integrated Security=True");
+            connection = new SqlConnection("Data Source=.\\MSSQLSERVER2022;Initial Catalog=MoodSync;Integrated Security=True;MultipleActiveResultSets=True;");
             connection.Open();
+
         }
         public SqlDataReader ExecuteQueryWithReader(string query, SqlParameter[] parameters = null)
         {

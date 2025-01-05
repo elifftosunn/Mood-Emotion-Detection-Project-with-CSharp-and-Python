@@ -215,6 +215,7 @@
             Controls.Add(textBoxLName);
             Controls.Add(textBoxFName);
             Controls.Add(labelCreateAnAccount);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "SignUpForm";
             Text = "SignUp";
             ((System.ComponentModel.ISupportInitialize)errorProviderFName).EndInit();

@@ -145,6 +145,7 @@
             Controls.Add(textBoxPassword);
             Controls.Add(textBoxEmail);
             Controls.Add(labelLogin);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "LoginForm";
             Text = "LoginForm";
             ResumeLayout(false);
