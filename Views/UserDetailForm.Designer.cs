@@ -55,13 +55,17 @@
             reason = new DataGridViewTextBoxColumn();
             listViewUserPreferences = new ListView();
             btnBack = new Button();
-            domainUpDownForGenre = new DomainUpDown();
             label5 = new Label();
-            btnUpdateRecords = new Button();
+            btnUpdatePreferences = new Button();
+            numericUpDownPreferenceLevel = new NumericUpDown();
+            label6 = new Label();
+            comboBoxForGenreType = new ComboBox();
+            btnCalculateManual = new Button();
             panel2.SuspendLayout();
             groupBoxUserInformation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewMoodHistory).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridViewMusicRecommendation).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownPreferenceLevel).BeginInit();
             SuspendLayout();
             // 
             // panel2
@@ -245,7 +249,6 @@
             dataGridViewMoodHistory.AllowUserToAddRows = false;
             dataGridViewMoodHistory.AllowUserToDeleteRows = false;
             dataGridViewMoodHistory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            //dataGridViewMoodHistory.Columns.AddRange(new DataGridViewColumn[] { mood, detectionTime });
             dataGridViewMoodHistory.Location = new Point(347, 362);
             dataGridViewMoodHistory.Name = "dataGridViewMoodHistory";
             dataGridViewMoodHistory.ReadOnly = true;
@@ -273,7 +276,6 @@
             dataGridViewMusicRecommendation.AllowUserToAddRows = false;
             dataGridViewMusicRecommendation.AllowUserToDeleteRows = false;
             dataGridViewMusicRecommendation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            //dataGridViewMusicRecommendation.Columns.AddRange(new DataGridViewColumn[] { genreName, recommendationTime, reason });
             dataGridViewMusicRecommendation.Location = new Point(527, 168);
             dataGridViewMusicRecommendation.Name = "dataGridViewMusicRecommendation";
             dataGridViewMusicRecommendation.ReadOnly = true;
@@ -331,53 +333,86 @@
             btnBack.UseVisualStyleBackColor = false;
             btnBack.Click += btnBack_Click;
             // 
-            // domainUpDownForGenre
-            // 
-            domainUpDownForGenre.BorderStyle = BorderStyle.None;
-            domainUpDownForGenre.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 162);
-            domainUpDownForGenre.Items.Add("Pop");
-            domainUpDownForGenre.Items.Add("Rap");
-            domainUpDownForGenre.Items.Add("Rock");
-            domainUpDownForGenre.Items.Add("Latin");
-            domainUpDownForGenre.Items.Add("R&B (Rhythm and Blues)");
-            domainUpDownForGenre.Items.Add("EDM");
-            domainUpDownForGenre.Location = new Point(129, 400);
-            domainUpDownForGenre.Name = "domainUpDownForGenre";
-            domainUpDownForGenre.Size = new Size(171, 26);
-            domainUpDownForGenre.TabIndex = 16;
-            domainUpDownForGenre.Text = "Pop";
-            // 
             // label5
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            label5.Location = new Point(129, 362);
+            label5.Location = new Point(129, 348);
             label5.Name = "label5";
             label5.Size = new Size(152, 23);
             label5.TabIndex = 17;
             label5.Text = "Select genre name";
             // 
-            // btnUpdateRecords
+            // btnUpdatePreferences
             // 
-            btnUpdateRecords.BackColor = Color.PeachPuff;
-            btnUpdateRecords.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            btnUpdateRecords.ForeColor = Color.Black;
-            btnUpdateRecords.Location = new Point(129, 449);
-            btnUpdateRecords.Name = "btnUpdateRecords";
-            btnUpdateRecords.Size = new Size(178, 50);
-            btnUpdateRecords.TabIndex = 19;
-            btnUpdateRecords.Text = "Update Records";
-            btnUpdateRecords.UseVisualStyleBackColor = false;
-            btnUpdateRecords.Click += btnUpdateRecords_Click;
+            btnUpdatePreferences.BackColor = Color.FromArgb(202, 180, 133);
+            btnUpdatePreferences.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnUpdatePreferences.ForeColor = Color.Black;
+            btnUpdatePreferences.Location = new Point(110, 510);
+            btnUpdatePreferences.Name = "btnUpdatePreferences";
+            btnUpdatePreferences.Size = new Size(212, 53);
+            btnUpdatePreferences.TabIndex = 19;
+            btnUpdatePreferences.Text = "Update Preferences";
+            btnUpdatePreferences.UseVisualStyleBackColor = false;
+            btnUpdatePreferences.Click += btnUpdateRecords_Click;
+            // 
+            // numericUpDownPreferenceLevel
+            // 
+            numericUpDownPreferenceLevel.Location = new Point(129, 464);
+            numericUpDownPreferenceLevel.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
+            numericUpDownPreferenceLevel.Name = "numericUpDownPreferenceLevel";
+            numericUpDownPreferenceLevel.Size = new Size(170, 27);
+            numericUpDownPreferenceLevel.TabIndex = 20;
+            numericUpDownPreferenceLevel.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownPreferenceLevel.ValueChanged += numericUpDownPreferenceLevel_ValueChanged;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label6.Location = new Point(129, 426);
+            label6.Name = "label6";
+            label6.Size = new Size(182, 23);
+            label6.TabIndex = 21;
+            label6.Text = "Select preference level";
+            // 
+            // comboBoxForGenreType
+            // 
+            comboBoxForGenreType.DisplayMember = "Pop";
+            comboBoxForGenreType.FormattingEnabled = true;
+            comboBoxForGenreType.Items.AddRange(new object[] { "Pop", "Rap", "Rock", "Latin", "R&B (Rhythm and Blues)", "EDM" });
+            comboBoxForGenreType.Location = new Point(129, 384);
+            comboBoxForGenreType.Name = "comboBoxForGenreType";
+            comboBoxForGenreType.Size = new Size(170, 28);
+            comboBoxForGenreType.TabIndex = 22;
+            comboBoxForGenreType.ValueMember = "Pop";
+            comboBoxForGenreType.SelectedIndex = 0;
+            comboBoxForGenreType.SelectedValueChanged += comboBoxForGenreType_SelectedValueChanged;
+            // 
+            // btnCalculateManual
+            // 
+            btnCalculateManual.BackColor = Color.FromArgb(202, 180, 133);
+            btnCalculateManual.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnCalculateManual.ForeColor = Color.Black;
+            btnCalculateManual.Location = new Point(773, 530);
+            btnCalculateManual.Name = "btnCalculateManual";
+            btnCalculateManual.Size = new Size(212, 53);
+            btnCalculateManual.TabIndex = 24;
+            btnCalculateManual.Text = "Calculate Manual";
+            btnCalculateManual.UseVisualStyleBackColor = false;
+            btnCalculateManual.Click += btnCalculateManual_Click;
             // 
             // UserDetailForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1032, 595);
-            Controls.Add(btnUpdateRecords);
+            Controls.Add(btnCalculateManual);
+            Controls.Add(comboBoxForGenreType);
+            Controls.Add(label6);
+            Controls.Add(numericUpDownPreferenceLevel);
+            Controls.Add(btnUpdatePreferences);
             Controls.Add(label5);
-            Controls.Add(domainUpDownForGenre);
             Controls.Add(btnBack);
             Controls.Add(listViewUserPreferences);
             Controls.Add(dataGridViewMusicRecommendation);
@@ -395,6 +430,7 @@
             groupBoxUserInformation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewMoodHistory).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridViewMusicRecommendation).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownPreferenceLevel).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -429,8 +465,11 @@
         private DataGridViewTextBoxColumn recommendationTime;
         private DataGridViewTextBoxColumn reason;
         private Button btnBack;
-        private DomainUpDown domainUpDownForGenre;
         private Label label5;
-        private Button btnUpdateRecords;
+        private Button btnUpdatePreferences;
+        private NumericUpDown numericUpDownPreferenceLevel;
+        private Label label6;
+        private ComboBox comboBoxForGenreType;
+        private Button btnCalculateManual;
     }
 }

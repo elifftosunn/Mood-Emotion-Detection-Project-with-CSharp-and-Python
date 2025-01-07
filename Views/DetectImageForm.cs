@@ -35,7 +35,6 @@ namespace designProject
             InitializeComponent();
             this.login = loginForm;
             userID = login.getUserID();
-            Debug.WriteLine($"Detect Image Form USER ID: {userID}");
 
         }
 
@@ -91,7 +90,7 @@ namespace designProject
         }
         private void panelForMusicClick(object sender, EventArgs e)
         {
-            // Týklama sýrasýnda yapýlacak iþlemler
+            // Actions to be performed during click
             Panel clickedPanel = sender as Panel;
             if (clickedPanel != null)
             {
@@ -131,9 +130,6 @@ namespace designProject
                     }
 
                 }
-
-                // GELINCE KULLANICININ TERCIH ETTIGI MUZIKLERI MusicRecommendations TABLOSUNA EKLE
-                // MusicRecommendation CLASS'I UZERINDEN TUM BILGILERI CEKIP UserDetails FORMU UZERINDE GOSTER
             }
         }
         private void addPanelForMusics(string mood)
