@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace designProject.Models
+namespace MoodSyncProject.Controllers
 {
     public class DBConnection
     {
@@ -35,20 +35,20 @@ namespace designProject.Models
             {
                 OpenConnection();
                 cmd = new SqlCommand(query, connection);
-                if (parameters != null) 
+                if (parameters != null)
                 {
                     cmd.Parameters.AddRange(parameters);
                 }
                 return cmd.ExecuteNonQuery();
             }
-            finally 
+            finally
             {
                 CloseConnection();
             }
         }
-        public void CloseConnection() 
+        public void CloseConnection()
         {
-            if (connection != null && connection.State == System.Data.ConnectionState.Open) 
+            if (connection != null && connection.State == System.Data.ConnectionState.Open)
             {
                 connection.Close();
             }
