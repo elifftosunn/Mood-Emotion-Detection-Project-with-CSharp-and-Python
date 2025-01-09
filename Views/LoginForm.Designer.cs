@@ -147,6 +147,7 @@
             Controls.Add(labelLogin);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "LoginForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "LoginForm";
             ResumeLayout(false);
             PerformLayout();

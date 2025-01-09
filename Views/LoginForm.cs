@@ -26,9 +26,12 @@ namespace designProject.Views
         private DBConnection connection;
         private SqlDataReader reader;
         public string loginTime;
-        public LoginForm()
+        private DetectImageForm detectImageForm;
+        public SignUpForm signUpForm;
+        public LoginForm(SignUpForm _signUpForm)
         {
             InitializeComponent();
+            signUpForm = _signUpForm;
         }
 
         private void loginBtn_Click(object sender, EventArgs e)
@@ -62,8 +65,8 @@ namespace designProject.Views
                 {
                     this.userID = Convert.ToInt32(reader["userID"]);
                     Thread.Sleep(500);
-                    DetectImageForm detectImageForm = new DetectImageForm(this);
-                    detectImageForm.ShowDialog();
+                    this.detectImageForm = new DetectImageForm(this);
+                    this.detectImageForm.ShowDialog();
                     this.Close();
                 }
             }
@@ -120,22 +123,21 @@ namespace designProject.Views
 
         private void btnTogglePassword_Click(object sender, EventArgs e)
         {
-            // Şifre gösterim durumunu değiştir
+            // Change password display status
             this.isPasswordVisible = !this.isPasswordVisible;
 
             if (this.isPasswordVisible)
             {
-                textBoxPassword.PasswordChar = '\0'; // Şifreyi göster
-                btnTogglePassword.Text = "🙈";  // Göz kapa simgesi
+                textBoxPassword.PasswordChar = '\0'; // show password
+                btnTogglePassword.Text = "🙈";  
             }
             else
             {
-                textBoxPassword.PasswordChar = '●'; // Şifreyi gizle
-                btnTogglePassword.Text = "👁️"; // Göz simgesi
+                textBoxPassword.PasswordChar = '●'; // hidden password
+                btnTogglePassword.Text = "👁️";
             }
 
-            // Kullanıcının metni etkilenmez, hiçbir veri silinmez
-            textBoxPassword.Focus(); // Kullanıcı deneyimi için odak şifre alanında kalır
+            textBoxPassword.Focus(); 
         }
     }
 }

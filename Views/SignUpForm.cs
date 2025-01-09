@@ -21,6 +21,7 @@ namespace designProject.Views
         private SqlDataReader dataReader;
         private User user;
         private string fName, lName, email, phoneNumber, password, confirmPassword;
+        private LoginForm loginForm;
         public SignUpForm()
         {
             InitializeComponent();
@@ -119,7 +120,7 @@ namespace designProject.Views
                                                 MessageBox.Show("Record added successfully!", "Add Record",
                                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                                                 Thread.Sleep(1000);
-                                                LoginForm loginForm = new LoginForm();
+                                                loginForm = new LoginForm(this);
                                                 loginForm.Show();
                                                 this.Hide();
                                             }else
@@ -157,7 +158,7 @@ namespace designProject.Views
                             MessageBox.Show("Girdiğiniz mail adresine ait kullanıcı veritabanında bulunmaktadır.\nGiriş sayfasına yönlendiriliyorsunuz...",
                                 "User Found!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             Thread.Sleep(1000);
-                            LoginForm loginForm = new LoginForm();
+                            loginForm = new LoginForm(this);
                             loginForm.Show();
                             this.Hide();
                         }
@@ -187,12 +188,11 @@ namespace designProject.Views
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            LoginForm loginForm = new LoginForm();
-            loginForm.Show();
+            loginForm = new LoginForm(this);
+            loginForm.ShowDialog();
             this.Hide();
 
             //loginForm.FormClosed += (s, args) => Application.Exit();
-
         }
 
 

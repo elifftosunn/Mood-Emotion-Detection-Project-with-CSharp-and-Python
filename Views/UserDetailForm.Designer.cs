@@ -386,8 +386,8 @@
             comboBoxForGenreType.Size = new Size(170, 28);
             comboBoxForGenreType.TabIndex = 22;
             comboBoxForGenreType.ValueMember = "Pop";
-            comboBoxForGenreType.SelectedIndex = 0;
             comboBoxForGenreType.SelectedValueChanged += comboBoxForGenreType_SelectedValueChanged;
+            comboBoxForGenreType.SelectedIndex = 0;
             // 
             // btnCalculateManual
             // 
@@ -422,6 +422,7 @@
             Controls.Add(panel2);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "UserDetailForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "UserDetails";
             Load += UserDetailForm_Load;
             panel2.ResumeLayout(false);

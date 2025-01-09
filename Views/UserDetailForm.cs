@@ -25,14 +25,16 @@ namespace MoodSyncProject.Views
         public int userID, genreID, selectedPreferenceLevel;
         private string selectedGenre;
         private MusicRecommendation musicRecommendation;
+        private LoginForm loginForm;
 
         public UserDetailForm(DetectImageForm detectImageForm)
         {
             InitializeComponent();
-            _detectImageForm = detectImageForm;
-            _dbConnection = new DBConnection();
-            userID = _detectImageForm.userID;
-            musicRecommendation = new MusicRecommendation(this);
+            this._detectImageForm = detectImageForm ?? throw new ArgumentNullException(nameof(detectImageForm), "DetectImageForm cannot be null");
+            this._dbConnection = new DBConnection();
+            this.userID = _detectImageForm.userID;
+            this.musicRecommendation = new MusicRecommendation(this);
+            this.loginForm = _detectImageForm.login;
         }
         private void UserDetailForm_Load(object sender, EventArgs e)
         {
@@ -130,12 +132,16 @@ namespace MoodSyncProject.Views
         private void btnLogout_Click(object sender, EventArgs e)
         {
             this.Close();
+            _detectImageForm.Close();
+            loginForm.Close();
+            loginForm.signUpForm.Close();
         }
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            _detectImageForm.Show();
             this.Close();
+            _detectImageForm.Show();
+            
         }
 
         private void btnUpdateRecords_Click(object sender, EventArgs e)

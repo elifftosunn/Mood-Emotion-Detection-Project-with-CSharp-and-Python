@@ -217,6 +217,7 @@
             Controls.Add(labelCreateAnAccount);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "SignUpForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "SignUp";
             ((System.ComponentModel.ISupportInitialize)errorProviderFName).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProviderLName).EndInit();

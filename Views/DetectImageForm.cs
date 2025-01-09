@@ -24,12 +24,13 @@ namespace designProject
         private SqlDataReader dataReader;
         private Music music;
         private List<Music> musicList;
-        private LoginForm login;
+        public LoginForm login;
         public string logoutTime;
         public string genreID;
         private string ImagePath;
         public string mood;
         public int userID;
+        private UserDetailForm userdetailform;
         public DetectImageForm(LoginForm loginForm)
         {
             InitializeComponent();
@@ -237,10 +238,9 @@ namespace designProject
         }
         private void btnUserDetails_Click(object sender, EventArgs e)
         {
-            UserDetailForm userdetailform = new UserDetailForm(this);
-            userdetailform.ShowDialog();
             this.Hide();
-            this.login.Close();
+            userdetailform = new UserDetailForm(this);
+            userdetailform.Show();
         }
     }
 }
