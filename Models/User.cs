@@ -45,11 +45,11 @@ namespace designProject.Models
         {
             using (SHA256 sha256 = SHA256.Create())
             {
-                // Şifreyi byte array'e dönüştür
+                // Convert password to byte array
                 byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
-                // Hash işlemi
+                // Hashing
                 byte[] hashBytes = sha256.ComputeHash(passwordBytes);
-                // Hashlenmiş byte array'i string'e dönüştür
+                // Convert hashed byte array to string
                 StringBuilder sb = new StringBuilder();
                 foreach (byte b in hashBytes)
                 {
@@ -70,7 +70,7 @@ namespace designProject.Models
 
             try
             {
-                using (dataReader = connection.ExecuteQueryWithReader(query, parameters)) // null gozukuyor
+                using (dataReader = connection.ExecuteQueryWithReader(query, parameters)) 
                 {
                     if (dataReader.Read())
                     {
@@ -83,7 +83,7 @@ namespace designProject.Models
                     return false; // user not found
                 }
 
-                // Kullanıcıdan gelen şifreyi hashle ve karşılaştır
+                // Hash and compare password from user
                 string hashedPassword = HashPassword(this.password);
 
                 return hashedPassword == hashedPasswordFromDb;
