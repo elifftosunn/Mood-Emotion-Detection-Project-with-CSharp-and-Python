@@ -47,13 +47,15 @@ Veritabanı, kullanıcılara özel veri ve sistem önerilerini saklamak için op
 5. Sistem kullanıcı tercihlerini öğrenerek öneri doğruluğunu artırır.
 
 ## 📂 Kurulum ve Kullanım
-  1. **Depoyu Klonlayın:**
-   ```
+
+1. **Depoyu Klonlayın:**
+   ```bash
    git clone https://github.com/elifftosunn/Mood-Emotion-Detection-Project-with-CSharp-and-Python.git
    cd Mood-Emotion-Detection-Project-with-CSharp-and-Python
-	 ```
-  2. **Gerekli Bağımlılıkları Yükleyin:**
-  MSSQL Server kurulumunu tamamlayın ve bağlantı dizesini yapılandırın.
-  C# Nuget Packages üzerinden System.Data.SqlClient 4.9.0 sürümünü indirin.
-  3. **Uygulamayı Çalıştırın:**
-  Visual Studio kullanarak projeyi açın ve çalıştırın.
+2. **Gerekli Bağımlılıkları Yükleyin:**
+
+- MSSQL Server kurulumunu tamamlayın ve bağlantı dizesini yapılandırın.
+- C# Nuget Packages üzerinden System.Data.SqlClient 4.9.0 sürümünü indirin.
+
+3. **Uygulamayı Çalıştırın:**
+- Visual Studio kullanarak projeyi açın ve çalıştırın.
