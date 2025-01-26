@@ -1,1 +1,1 @@
-C:\Users\dptos\source\repos\designProject\designProject\detected_images\abdullah_gul.jpg, negative
+C:\Users\dptos\source\repos\designProject\designProject\detected_images\Abdullah_Gul_0005.jpg, positive

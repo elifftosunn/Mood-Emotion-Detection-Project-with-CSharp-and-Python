@@ -143,6 +143,7 @@
             flowLayoutPanelForMusics.Name = "flowLayoutPanelForMusics";
             flowLayoutPanelForMusics.Size = new Size(576, 337);
             flowLayoutPanelForMusics.TabIndex = 6;
+            flowLayoutPanelForMusics.UseWaitCursor = true;
             // 
             // panel3
             // 

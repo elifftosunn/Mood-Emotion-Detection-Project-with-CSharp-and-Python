@@ -31,7 +31,7 @@ namespace MoodSyncProject.Models
             return Math.Max(1, Math.Min(5, (int)Math.Ceiling(listenCount / 10.0))); // The recommended value is scaled from 1 to 5
         }
 
-        private int GetListenCount(int userId, int genreId)
+        private int GetListenCount(int userId, int genreId) // BU KISMI TURE OZGU YAP, PARAMETRE OLARAK GENREID AL
         {
             string query = @"SELECT 
                                 MAX(countByGenreID) AS maxCountByGenreID 

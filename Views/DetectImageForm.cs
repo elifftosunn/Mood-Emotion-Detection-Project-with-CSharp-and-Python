@@ -35,7 +35,9 @@ namespace designProject
         {
             InitializeComponent();
             this.login = loginForm;
-            userID = login.getUserID();
+            this.userID = login.getUserID();
+            this.conn = new DBConnection();
+
 
         }
 
@@ -76,12 +78,9 @@ namespace designProject
                     new SqlParameter ("@_mood", System.Data.SqlDbType.VarChar) {Value = mood },
                     new SqlParameter("@_detectionTime", System.Data.SqlDbType.DateTime) {Value = DateTime.Now},
             };
-            conn = new DBConnection();
             int res = conn.ExecuteNonQuery(query, parameters);
             if (res > 0)
             {
-                //MessageBox.Show("Tespit veritabanýna baþarýlý bir þekilde kayýt edildi.","Detection",
-                //    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 addPanelForMusics(mood);
             }
             else
@@ -115,7 +114,7 @@ namespace designProject
                     }
                     string query = "INSERT INTO MusicRecommendations VALUES (@_userID, @_genreID, @_recommendationTime, @_reason)";
                     SqlParameter[] parameters = {
-                    new SqlParameter("@_userID", SqlDbType.Int){Value = userID},
+                        new SqlParameter("@_userID", SqlDbType.Int){Value = userID},
                         new SqlParameter("@_genreID", SqlDbType.Int) {Value = genreID},
                         new SqlParameter("@_recommendationTime", SqlDbType.DateTime) {Value = DateTime.Now},
                         new SqlParameter("@_reason", SqlDbType.VarChar){Value = "Was added because the mode was "+mood}
@@ -141,16 +140,20 @@ namespace designProject
             {
                 Panel panelForMusics = new Panel
                 {
-                    BackColor = Color.FromArgb(202, 180, 133),
-                    Location = new Point(3, 58), // Default location, will be organized within the FlowLayoutPanel 
+                    BackColor = Color.FromArgb(202, 180, 133), // Default color
+                    Location = new Point(3, 58),
                     Name = "panelForMusics",
                     Size = new Size(573, 70),
                     TabIndex = 0,
                     Tag = new Tuple<string, string>(music.getName(), music.getArtist())
                 };
-                panelForMusics.Click += panelForMusicClick; // new EventHandler(panelForMusicClick)
 
-                // add label on panel
+                // Assign mouse events
+                panelForMusics.MouseEnter += panelForMusic_MouseEnter;
+                panelForMusics.MouseLeave += panelForMusic_MouseLeave;
+                panelForMusics.Click += panelForMusic_Click;
+
+                // Add label on panel
                 Label musicLabel = new Label
                 {
                     Text = $"{music.getArtist()} - {music.getName()}",
@@ -159,25 +162,39 @@ namespace designProject
                     Location = new Point(10, 10)
                 };
                 panelForMusics.Controls.Add(musicLabel);
-
-                //Label lblMusicName = new Label
-                //{
-                //    Text = music.getName(),
-                //    Location = new Point(10, 10),
-                //    AutoSize = true
-                //};
-                //Label lblArtist = new Label
-                //{
-                //    Text = "Artist: " + music.getArtist(),
-                //    Location = new Point(10, lblMusicName.Location.Y + lblMusicName.Height + 5), // lblMusicName'in altýnda 5 piksel boþluk
-                //    AutoSize = true
-                //};
-                //panelForMusics.Controls.Add(lblArtist);
-                //panelForMusics.Controls.Add(lblMusicName);
-
                 flowLayoutPanelForMusics.Controls.Add(panelForMusics);
             }
         }
+        private void panelForMusic_MouseEnter(object sender, EventArgs e)
+        {
+            Panel panel = sender as Panel;
+            if (panel != null)
+            {
+                panel.BackColor = Color.FromArgb(255, 200, 150); // set hover color
+            }
+        }
+
+        private void panelForMusic_MouseLeave(object sender, EventArgs e)
+        {
+            Panel panel = sender as Panel;
+            if (panel != null)
+            {
+                panel.BackColor = Color.FromArgb(202, 180, 133); // convert original color
+            }
+        }
+
+        private void panelForMusic_Click(object sender, EventArgs e)
+        {
+            Panel panel = sender as Panel;
+            if (panel != null)
+            {
+                panel.BackColor = Color.FromArgb(255, 150, 100); // change color after click
+            }
+
+            // Call the existing click function
+            panelForMusicClick(sender, e);
+        }
+
 
         private string ReadPythonOutput(string outputFilePath)
         {
@@ -219,6 +236,8 @@ namespace designProject
         {
             logoutTime = DateTime.Now.ToString();
             string sessionQuery = "INSERT INTO Sessions VALUES (@_userID, @_loginTime, @_logoutTime)";
+            Debug.WriteLine("*********** LOGOUT *************");
+            Debug.WriteLine($"userID: {userID}");
             SqlParameter[] sessionParameters =
             {
                     new SqlParameter("@_userID", SqlDbType.Int) {Value = userID},

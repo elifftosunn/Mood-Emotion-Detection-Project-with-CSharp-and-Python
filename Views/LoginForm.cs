@@ -33,6 +33,7 @@ namespace designProject.Views
         {
             InitializeComponent();
             signUpForm = _signUpForm;
+            this.connection = new DBConnection();
         }
 
         private void loginBtn_Click(object sender, EventArgs e)
@@ -60,7 +61,6 @@ namespace designProject.Views
                 SqlParameter[] parameters = {
                     new SqlParameter("@_email", SqlDbType.VarChar) { Value = this.email}
                 };
-                this.connection = new DBConnection();
                 this.reader = this.connection.ExecuteQueryWithReader(query, parameters);
                 if (reader.Read()) 
                 {
